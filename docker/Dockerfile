@@ -1,4 +1,5 @@
-FROM nvcr.io/nvidia/tensorflow:20.12-tf2-py3
+# FROM nvcr.io/nvidia/tensorflow:22.05-tf2-py3
+FROM python:latest
 
 # where external files are mapped to
 ARG APP_DIR="/app"
@@ -30,7 +31,7 @@ RUN npm install -g n && n lts
 RUN pip install --upgrade pip
 
 # jupyter lab
-RUN pip install jupyterlab==v3.0.5
+RUN pip install jupyterlab
 
 # jupyterlab_code_formatter extension
 RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter@v1.4.2 --no-build
@@ -77,24 +78,16 @@ RUN pip install pandas
 RUN pip install sklearn
 RUN pip install scipy
 RUN pip install seaborn
-
-
-RUN pip install lightgbm
-
-# statsmodels
-RUN pip install statsmodels
-
-# texts
-RUN pip install pymystem3 nltk transformers
 RUN pip install tqdm
 
 # lightgbm
+RUN pip install lightgbm
 RUN apt-get install -y --no-install-recommends cmake build-essential gcc g++ git
 RUN git clone --recursive --branch stable --depth 1 https://github.com/Microsoft/LightGBM
 RUN (cd LightGBM/python-package/ && python3 setup.py install)
 
 # pytorch
-RUN pip install --pre torch torchvision torchaudio -f https://download.pytorch.org/whl/nightly/cu110/torch_nightly.html
+RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 
 # kaggle cli
 ENV KAGGLE_CONFIG_DIR ${APP_DIR}
